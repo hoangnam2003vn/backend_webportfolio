@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  # 1. Dịch vụ Backend (Node.js)
+  portfolio-api:
+    build: .
+    container_name: portfolio_backend
+    ports:
+      - "5000:5000" 
+    environment:
+      - PORT=5000
+      - MONGO_URI=mongodb://portfolio-db:27017/portfolio_db 
+    depends_on:
+      - portfolio-db
+    volumes:
+      - ./uploads:/app/uploads
+    restart: unless-stopped
+
+  # 2. Dịch vụ Database (MongoDB)
+  portfolio-db:
+    image: mongo:latest
+    container_name: portfolio_mongodb
+    ports:
+      - "27018:27017" 
+    volumes:
+      - mongo-portfolio-data:/data/db
+    restart: unless-stopped
+
+volumes:
+  mongo-portfolio-data: 
